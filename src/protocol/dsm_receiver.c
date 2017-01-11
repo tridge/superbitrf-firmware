@@ -285,7 +285,7 @@ void dsm_receiver_receive_cb(bool error) {
 		return;
 
 	// Send a debug message that we have received a packet
-	DEBUG(protocol, "DSM Receiver receive (channel: 0x%02X, packet_length: 0x%02X)", dsm_receiver.rf_channel, packet_length);
+	// DEBUG(protocol, "DSM Receiver receive (channel: 0x%02X, packet_length: 0x%02X)", dsm_receiver.rf_channel, packet_length);
 
 	// Check the receiver status
 	switch (dsm_receiver.status) {
@@ -326,7 +326,7 @@ void dsm_receiver_receive_cb(bool error) {
 		memcpy(usbrf_config.dsm_bind_mfg_id, dsm_receiver.mfg_id, 4);
 		usbrf_config.dsm_num_channels = packet[11];
 		usbrf_config.dsm_protocol = packet[12];
-		//config_store();
+		config_store();
 
 		// Start receiver
 		dsm_receiver_start_transfer();
@@ -424,8 +424,13 @@ void dsm_receiver_receive_cb(bool error) {
 		static int16_t channels[14];
 		convert_radio_to_channels(&packet[2], dsm_receiver.num_channels, dsm_receiver.resolution, channels);
 
-		DEBUG(protocol, "Receive commands channel[0x%02X]: 0x%02X (timing %s: %u)", dsm_receiver.rf_channel_idx, dsm_receiver.rf_channel,
-				dsm_receiver.crc_seed == ((dsm_receiver.mfg_id[0] << 8) + dsm_receiver.mfg_id[1])? "short":"long", timer_dsm_get_time());
+#if 0
+		DEBUG(protocol, "Recv channel[0x%02X]: N=%u 1:%4u 2:%4u 3:%4u 4:%4u 5:%4u 6:%4u (timing %s: %u)",
+                      dsm_receiver.rf_channel_idx,
+                      dsm_receiver.num_channels,
+                      channels[0], channels[1], channels[2], channels[3], channels[4], channels[5],
+                      dsm_receiver.crc_seed == ((dsm_receiver.mfg_id[0] << 8) + dsm_receiver.mfg_id[1])? "short":"long", timer_dsm_get_time());
+#endif
 
 		// Go to the next channel
 		dsm_receiver_set_next_channel();

@@ -39,20 +39,20 @@ void (*protocol_functions[][3])(void) = {
 
 /* Default configuration settings. */
 const struct Config init_config = {
-			.version				= 0x01,
-			.protocol				= DSM_MITM,
+			.version				= 0x04,
+			.protocol				= DSM_RECEIVER,
 			.protocol_start 			= true,
-			.debug_enable 				= false,
+			.debug_enable 				= true,
 			.debug_button				= true,
 			.debug_cyrf6936				= false,
-			.debug_dsm				= false,
+			.debug_dsm				= true,
 			.debug_protocol				= true,
 			.timer_scaler				= 1,
 			.dsm_start_bind				= false,
 			.dsm_max_channel			= DSM_MAX_CHANNEL,
 			.dsm_bind_channel			= -1,
 			.dsm_bind_mfg_id			= {0xDC, 0x72, 0x96, 0x4F},
-			.dsm_protocol				= 0x01,
+			.dsm_protocol				= DSM_DSMX_2,
 			.dsm_num_channels			= 6,
 			.dsm_force_dsm2				= false,
 			.dsm_max_missed_packets 		= 3,
@@ -75,6 +75,7 @@ void config_init(void) {
 		memcpy(&usbrf_config, &init_config, sizeof(init_config));
 	}
 
+        usbrf_config.debug_dsm = false;
 }
 
 void config_store(void) {
